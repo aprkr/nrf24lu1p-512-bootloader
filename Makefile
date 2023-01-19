@@ -15,6 +15,7 @@ all: clean $(TARGET) size
 
 $(TARGET): $(REL_FILES)
 	$(CC) $(REL_FILES) -o $(TARGET)
+	objcopy --gap-fill 255 -I ihex $(TARGET) -O binary bootloader.bin
 
 $(REL_FILES): | obj
 
@@ -30,14 +31,5 @@ size: $(TARGET)
 clean:
 	rm -f $(TARGET) *.lnk *.lst *.map *.rel *.rst *.sym *.mem *.lk *.asm *.lk *.cdb *.omf
 	rm -fr obj
-
-flash: clean $(TARGET) size
-	nrfburn -f 16 -w $(TARGET)
-
-flash16: clean $(TARGET) size
-	nrfburn -f 16 -w $(TARGET)
-
-flash32: clean $(TARGET) size
-	nrfburn -f 32 -w $(TARGET)
 
 .PHONY: size clean flash
