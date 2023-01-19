@@ -1,7 +1,7 @@
 #!/bin/env python
 import usb.core
 import usb.util
-import sys
+import sys, time
 
 USB_TIMEOUT = 1000
 
@@ -19,6 +19,15 @@ OUT_ENDPOINT_ADDR = 0x01
 BLOCKS_PER_16K = 256 # 16kb / 64 byte blocks
 FLASH_BLOCK_SIZE = 64
 PAGE_SIZE = 512
+
+dev = usb.core.find(idVendor=0x1915, idProduct=0x0102)
+if dev:
+    print("Found device running nrf-research-firmware")
+    dev.write(OUT_ENDPOINT_ADDR, [0xFF], USB_TIMEOUT)
+    try: dev.reset()
+    except: 
+        time.sleep(1)
+        pass
 
 dev = usb.core.find(idVendor=0x1915, idProduct=0x0101)
 if not dev:
